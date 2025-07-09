@@ -8,7 +8,7 @@ int minAngle = 30;
 int maxAngle = 150;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   myservo.attach(3);  // 서보 핀
@@ -17,30 +17,31 @@ void setup() {
 }
 
 void loop() {
-  for (int pos = minAngle; pos <= maxAngle; pos += 5) {
+  for (int pos = minAngle; pos <= maxAngle; pos += 2) {
     myservo.write(pos);
-    delay(200);  // 서보 안정화
+    delay(100);  // 서보 안정화
 
     long duration = getEchoDuration();
     float distance = duration * 0.034 / 2;
 
-    Serial.print("ANGLE : ");
+    // ✅ Processing과 연동되는 형식으로 출력
     Serial.print(pos);
-    Serial.print(", DISTANCE : ");
-    Serial.println(distance);
+    Serial.print(",");
+    Serial.print(distance, 2); // 소수점 둘째 자리까지
+    Serial.println(".");
   }
 
-  for (int pos = maxAngle; pos >= minAngle; pos -= 5) {
+  for (int pos = maxAngle; pos >= minAngle; pos -= 2) {
     myservo.write(pos);
-    delay(200);  // 서보 안정화
+    delay(100);
 
     long duration = getEchoDuration();
     float distance = duration * 0.034 / 2;
 
-    Serial.print("ANGLE : ");
     Serial.print(pos);
-    Serial.print(", DISTANCE : ");
-    Serial.println(distance);
+    Serial.print(",");
+    Serial.print(distance, 2);
+    Serial.println(".");
   }
 }
 
@@ -50,5 +51,5 @@ long getEchoDuration() {
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
-  return pulseIn(echoPin, HIGH, 30000);  // 최대 30ms 대기 (5m)
+  return pulseIn(echoPin, HIGH, 30000);  // 타임아웃 30ms
 }
