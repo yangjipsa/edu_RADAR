@@ -19,6 +19,7 @@ void setup() {
 
  smooth();
  myPort = new Serial(this,"COM5", 115200); // starts the serial communication
+ //myPort = new Serial(this, "/dev/cu.usbmodem11201", 115200);
  myPort.bufferUntil('.'); // reads the data from the serial port up to the character '.'. So actually it reads this: angle,distance.
 // orcFont = loadFont("OCRAExtended-30.vlw");
 }
@@ -38,19 +39,28 @@ void draw() {
   drawObject();
   drawText();
 }
-void serialEvent (Serial myPort) { // starts reading data from the Serial Port
-  // reads the data from the Serial Port up to the character '.' and puts it into the String variable "data".
+void serialEvent(Serial myPort) {
   data = myPort.readStringUntil('.');
-  data = data.substring(0,data.length()-1);
-  
-  index1 = data.indexOf(","); // find the character ',' and puts it into the variable "index1"
-  angle= data.substring(0, index1); // read the data from position "0" to position of the variable index1 or thats the value of the angle the Arduino Board sent into the Serial Port
-  distance= data.substring(index1+1, data.length()); // read the data from position "index1" to the end of the data pr thats the value of the distance
-  
-  // converts the String variables into Integer
-  iAngle = int(angle);
-  iDistance = int(distance);
+  if (data == null) return;
+  data = data.trim();
+
+  int index = data.indexOf(",");
+  if (index > 0) {
+    angle = data.substring(0, index);
+    distance = data.substring(index + 1);
+
+    try {
+      iAngle = int(angle);
+      iDistance = int(float(distance));  // float 처리 후 정수 변환
+
+      println("▶ RECEIVED: " + data);
+      println("→ Parsed angle: " + iAngle + ", distance: " + iDistance);
+    } catch (Exception e) {
+      println("⚠️ Parsing error: " + e);
+    }
+  }
 }
+
 void drawRadar() {
   pushMatrix();
   translate(960/2,1000/2); // moves the starting coordinats to new location
