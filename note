@@ -41,3 +41,55 @@ void loop()
   
   delay(50);
 }
+
+
+----------------------
+
+void setup() {
+  size(300, 300);
+  background(0);
+  float w = width;
+  float h = height;
+  float halfW = width/2;
+  float halfH = height/2;
+  
+  fill(0,255,0,50);
+  noStroke();
+  quad(30,30,0,h,w-30,h-30,w,0);
+  
+  noFill();
+  stroke(0,0,255);
+  strokeWeight(5);
+  line(0,0,w,h);
+  stroke(255,0,0);
+  line(0+30,h-30,w-30,30);
+  
+  stroke(255,100);
+  strokeWeight(2);
+  arc(halfW, halfH, w-10, h-10,        0 , 0.5 * PI);
+  arc(halfW, halfH, w-70, h-70, 0.5 * PI , 1.0 * PI);
+  arc(halfW, halfH, w-10, h-10, 1.0 * PI , 1.5 * PI);
+  arc(halfW, halfH, w-70, h-70, 1.5 * PI , 2.0 * PI);
+  
+  
+    
+  stroke(255,200);
+  circle(halfW, halfH, w-120); 
+  circle(halfW, halfH, w-180); 
+  fill(255);
+  stroke(255,200);
+  circle(halfW, halfH, w-210); 
+  
+  fill(0,50); noStroke();
+  int squareWidth = 60;
+  translate(halfW,halfH);
+  rotate(PI/4.0);
+  square(-squareWidth/2 ,-squareWidth/2 ,squareWidth);
+  
+  fill(100,0,100,200);
+  int triR = 40;
+  rotate(-PI/4);
+  triangle(-triR/2,triR/2, triR/2, triR/2, 0, -triR/2); 
+}
+
+
