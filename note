@@ -1,10 +1,18 @@
-#define TRIG_PIN 4
-#define ECHO_PIN 5
+#include <Servo.h>
+
+#define SERVO_PIN 3
+#define TRIG_PIN  4
+#define ECHO_PIN  5
+
+int pos = 0;
+
+Servo myservo;
 
 void setup() {
   Serial.begin(9600);
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
+  myservo.attach(SERVO_PIN);
 }
 
 float calDistance(int trigPin, int echoPin)
@@ -23,11 +31,13 @@ float calDistance(int trigPin, int echoPin)
 }
 void loop() 
 {
-  float distance_cm = calDistance(TRIG_PIN, ECHO_PIN);
-  Serial.println(distance_cm);
-  
-  if (distance_cm > 50) digitalWrite(LED, HIGH);
-  else digitalWrite(LED, LOW);
+  int distance_cm = calDistance(TRIG_PIN, ECHO_PIN);
+  if (distance_cm < 10)       distance_cm = 10;
+  else if (distance_cm > 400) distance_cm = 400;
 
+  pos = map(distance_cm, 10, 400, 10, 170);
+  myservo.write(pos);
+  //Serial.println(distance_cm);
+  
   delay(50);
 }
